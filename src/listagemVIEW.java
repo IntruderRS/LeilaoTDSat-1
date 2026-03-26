@@ -1,5 +1,7 @@
 
+import java.sql.Connection; 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class listagemVIEW extends javax.swing.JFrame {
@@ -188,7 +190,13 @@ public class listagemVIEW extends javax.swing.JFrame {
 
     private void listarProdutos(){
         try {
-            ProdutosDAO produtosdao = new ProdutosDAO();
+            conectaDAO dao = new conectaDAO();
+            Connection conn = dao.conectar();
+            
+            if (conn == null) {
+            JOptionPane.showMessageDialog(null, "Erro na conexão com o banco!");
+            return;
+        }
             
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
             model.setNumRows(0);
