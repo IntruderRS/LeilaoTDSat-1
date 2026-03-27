@@ -8,9 +8,7 @@ import java.util.ArrayList;
 
 public class ProdutosDAO {
     
-    Connection conn;
-    PreparedStatement prep;
-    ResultSet resultset;
+    
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
     public void cadastrarProduto (ProdutosDTO produto){
@@ -29,7 +27,7 @@ public class ProdutosDAO {
         conecta.desconectar();
         
     } catch (java.sql.SQLException e) {
-        // Se der erro no banco, esta mensagem aparecerá
+        
         javax.swing.JOptionPane.showMessageDialog(null, "Erro ao cadastrar no banco: " + e.getMessage());
     } 
     }
@@ -45,7 +43,7 @@ public class ProdutosDAO {
     boolean sucesso = false;
 
     try {
-        // 1. Verifica status
+        // AQUI O STATUS SERÁ VERIFICADO
         String sqlCheck = "SELECT status FROM produtos WHERE id = ?";
         PreparedStatement prepCheck = conn.prepareStatement(sqlCheck);
         prepCheck.setInt(1, id);
@@ -53,10 +51,10 @@ public class ProdutosDAO {
 
         if (rs.next()) {
             String statusAtual = rs.getString("status");
-
+            //PERCEBI QUE PODIA VENDER UM PRODUTO JÁ VENDIDO, AQUI FAZ A VERIFICAÇÃO ANTES
             if ("Vendido".equalsIgnoreCase(statusAtual)) {
                 javax.swing.JOptionPane.showMessageDialog(null, "Produto já está VENDIDO!");
-                sucesso = false; // Retorna falso para o botão não mostrar sucesso
+                sucesso = false; 
             } else {
                 // 2. Atualiza se não estiver vendido
                 String sqlUpdate = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
