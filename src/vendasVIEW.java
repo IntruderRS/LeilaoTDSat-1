@@ -1,4 +1,9 @@
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+
+
 
 public class vendasVIEW extends javax.swing.JFrame {
     
@@ -7,8 +12,32 @@ public class vendasVIEW extends javax.swing.JFrame {
     
     public vendasVIEW() {
         initComponents();
-        //listarProdutos();
+        listarProdutosVendidosTabela();
     }
+    
+    private void listarProdutosVendidosTabela() {
+    try {
+        ProdutosDAO produtosdao = new ProdutosDAO();
+        
+        // Pega o modelo da sua tabela 'listaProdutosVendidos'
+        DefaultTableModel model = (DefaultTableModel) listaProdutosVendidos.getModel();
+        model.setNumRows(0); // Limpa a tabela antes de preencher
+
+        // Chama o método que corrigimos no DAO
+        ArrayList<ProdutosDTO> lista = produtosdao.listarProdutosVendidos();
+
+        for (int num = 0; num < lista.size(); num++) {
+            model.addRow(new Object[]{
+                lista.get(num).getId(),
+                lista.get(num).getNome(),
+                lista.get(num).getValor(),
+                lista.get(num).getStatus()
+            });
+        }
+    } catch (Exception erro) {
+        JOptionPane.showMessageDialog(null, "Erro ao carregar tabela de vendas: " + erro);
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
