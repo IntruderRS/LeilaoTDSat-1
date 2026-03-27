@@ -124,6 +124,7 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_txtcadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        
         String nome = txtcadastroNome.getText();
         String valorTexto = txtcadastroValor.getText();
         String status = "A Venda";
@@ -165,7 +166,6 @@ public class cadastroVIEW extends javax.swing.JFrame {
         txtcadastroNome.setText("");
         txtcadastroValor.setText("");
         txtcadastroNome.requestFocus();
-
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
