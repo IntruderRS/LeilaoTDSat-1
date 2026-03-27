@@ -18,12 +18,10 @@ public class vendasVIEW extends javax.swing.JFrame {
     private void listarProdutosVendidosTabela() {
     try {
         ProdutosDAO produtosdao = new ProdutosDAO();
-        
-        // Pega o modelo da sua tabela 'listaProdutosVendidos'
+              
         DefaultTableModel model = (DefaultTableModel) listaProdutosVendidos.getModel();
         model.setNumRows(0); // Limpa a tabela antes de preencher
 
-        // Chama o método que corrigimos no DAO
         ArrayList<ProdutosDTO> lista = produtosdao.listarProdutosVendidos();
 
         for (int num = 0; num < lista.size(); num++) {
@@ -110,9 +108,6 @@ public class vendasVIEW extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
