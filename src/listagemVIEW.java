@@ -1,12 +1,13 @@
 
-import java.sql.Connection; 
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import java.sql.Connection; // O UNICO import de Connection que deve existir
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
 
 public class listagemVIEW extends javax.swing.JFrame {
 
-    
     public listagemVIEW() {
         initComponents();
         listarProdutos();
@@ -123,17 +124,34 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
         
+        String idTexto = id_produto_venda.getText(); 
+
+    if (!idTexto.isEmpty()) {
+        int id = Integer.parseInt(idTexto);
+        
+        ProdutosDAO produtodao = new ProdutosDAO();
+        // Chama o método e verifica o retorno
+        if (produtodao.venderProduto(id)) {
+            // SÓ MOSTRA ESTA MENSAGEM SE A DAO RETORNAR TRUE
+            javax.swing.JOptionPane.showMessageDialog(null, "Venda realizada com sucesso!");
+            listarProdutos(); // Atualiza a tabela na tela
+        }
+        
+        id_produto_venda.setText(""); // Limpa o campo de ID
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(null, "Informe o ID do produto!");
+    }
+
         ProdutosDAO produtosdao = new ProdutosDAO();
-        
+
         //produtosdao.venderProduto(Integer.parseInt(id));
         listarProdutos();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+        vendasVIEW vendas = new vendasVIEW(); 
+        vendas.setVisible(true);
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
@@ -188,31 +206,37 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos(){
-        try {
-            conectaDAO dao = new conectaDAO();
-            Connection conn = dao.conectar();
-            
-            if (conn == null) {
+    private void listarProdutos() {
+    try {
+        conectaDAO dao = new conectaDAO();
+        Connection conn = dao.conectar(); // Usa o método que você já tem na conectaDAO
+        
+        if (conn == null) {
             JOptionPane.showMessageDialog(null, "Erro na conexão com o banco!");
             return;
         }
-            
-            DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
-            
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
-            
-            for(int i = 0; i < listagem.size(); i++){
-                model.addRow(new Object[]{
-                    listagem.get(i).getId(),
-                    listagem.get(i).getNome(),
-                    listagem.get(i).getValor(),
-                    listagem.get(i).getStatus()
-                });
-            }
-        } catch (Exception e) {
+
+        // Nome da sua tabela no banco de dados leiloestdsat_bd
+        String sql = "SELECT * FROM produtos"; 
+        PreparedStatement prep = conn.prepareStatement(sql);
+        ResultSet rs = prep.executeQuery();
+
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setNumRows(0); // Limpa a tabela antes de carregar novos dados
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("id"),     // Nome da coluna no MySQL
+                rs.getString("nome"),
+                rs.getString("valor"),
+                rs.getString("status")
+            });
         }
-    
+        
+        dao.desconectar();
+        
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Erro ao listar dados: " + e.getMessage());
+    }
     }
 }
